@@ -112,3 +112,37 @@ pred inv6 {
 	// Students only work on projects of courses they are enrolled in
 	all s : Student | all p : s.projects | some c : s.enrolled | p in c.projects
 }
+
+pred inv7 {
+	// Students work on at most one project per course
+ all s : Student | all c : s.enrolled | lone s.projects & c.projects 
+}
+
+pred inv8 {
+	// A professor cannot teach herself
+  	all t : Professor | no t.teaches & t.enrolled
+
+}
+pred inv9 {
+	// A professor cannot teach colleagues
+	all p : Professor | all pp : (Professor - p) | some p.teaches & pp.teaches implies no p.teaches & pp.enrolled  
+}
+
+pred inv10 { // Copiado :(
+	// Only students have grades
+	 all c : Course | all p : Person | all g : Grade | p->g in c.grades implies p in Student
+}
+
+pred inv11 {
+	// Students only have grades in courses they are enrolled
+	all c : Course | all p : Person | all g : Grade | p->g in c.grades implies c in p.enrolled
+}
+
+
+pred inv12 {
+	// Students have at most one grade per course
+  all c : Course | all p : Student | lone g : Grade | p->g in c.grades
+	
+}
+// Resolução fixe
+// http://alloy4fun.inesctec.pt/4bo2wwGtp3NqZN2S3
