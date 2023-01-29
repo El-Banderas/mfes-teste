@@ -1,0 +1,16 @@
+let detach (i :item) (l :llabel)
+    requires { mem i state.labels /\ SetApp.mem l (find i state.labels) }
+    ensures  { mem i state.labels -> not (SetApp.mem l (find i state.labels)) }
+    ensures  { forall i' :item, l' :llabel. mem i' (old state.labels) /\ SetApp.mem l' (find i' (old state.labels)) -> 
+                                            (i' = i /\ l' = l) \/ 
+                                            mem i' state.labels /\ SetApp.mem l' (find i' state.labels)  }
+    ensures  { forall i' :item, l' :llabel. mem i' state.labels /\ SetApp.mem l' (find i' state.labels) ->
+                                            (mem i' (old state.labels) /\ SetApp.mem l' (find i' (old state.labels))) }
+    writes   { state.labels }
+					    
+  = let oldlblsi = find i state.labels in
+    let lblsi = SetApp.remove l oldlblsi in
+    if lblsi == empty()
+      then state.labels <- remove i state.labels 
+      else state.labels <- add i lblsi state.labels
+
